@@ -14,8 +14,9 @@ router.post("/profile-image",checkLogin,upload_multer,userController.uploadImage
 
 router.get("/requests",checkLogin,userController.getAllinvites);
 
-router.get("/requests/:status",checkLogin,userController.getRequestsByStatus);
+router.get("/change-status-request/:id/:status",checkLogin,userController.changeRequest);
 
+router.get("/requests/:status",checkLogin,userController.getRequestsByStatus);
 
 
 

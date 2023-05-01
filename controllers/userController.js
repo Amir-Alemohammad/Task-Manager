@@ -172,9 +172,53 @@ const getRequestsByStatus = async (req,res,next) => {
         next(err);
     }
 }
+const changeRequest = async (req,res,next) =>{
+    try {
+        const {id,status} = req.params;
+        
+        const request = await UsersModel.findOne({"inviteRequests._id" : id});
+        
+        const findRequest = request.inviteRequests.find(item => {
+            return item.id == id;
+        });
+        
+        if(!request){
+            const error = new Error("درخواستی با این مشخصات یافت نشد");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        if(findRequest.status !== "pending"){
+            const error = new Error("این درخواست قبلا رد یا پذیرفته شده است")
+            error.statusCode = 400;
+            throw error;
+        }
+        
+        if(!["accepted","rejected"].includes(status)){
+            const error = new Error("اطلاعات ارسال شده صحیح نمی باشد");
+            error.statusCode = 400;
+            throw error;
+        }
+        
+        await UsersModel.updateOne(
+            {"inviteRequests._id" : id},
+            {$set : {"inviteRequests.$.status" : status}}
+        );
+        
+        return res.status(200).json({
+            statusCode : 200,
+            success : true,
+            message : "تغییر وضعیت درخواست با موفقیت انجام شد",
+        });
+        
+    } catch (err) {
+        next(err);
+    }
+}
 module.exports = {
     getProfile,
     editProfile,
+    changeRequest,
     getAllinvites,
     uploadImage,
     getRequestsByStatus,
