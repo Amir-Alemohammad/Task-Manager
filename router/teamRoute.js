@@ -17,6 +17,7 @@ router.delete("/delete/:id",checkLogin,teamController.deleteTeamById);
 
 router.get("/:id",checkLogin,teamController.getTeamById);
 
+router.put("/update/:teamId",checkLogin,teamController.updateTeam);
 
 module.exports = {
     teamRoute : router,

@@ -87,12 +87,6 @@ const getProjectById = async (req,res,next) => {
         next(err);
     }
 }
-const getProjectOfTeam = (req,res,next) => {
-
-}
-const getProjectOfUser = (req,res,next) => {
-
-}
 const updateProject = async (req,res,next) => {
     try {
         if(!req.file || Object.keys(req.file).length == 0){
@@ -175,8 +169,6 @@ module.exports = {
     createProject,
     getAllProject,
     getProjectById,
-    getProjectOfTeam,
-    getProjectOfUser,
     updateProject,
     removeProject,
 }

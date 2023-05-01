@@ -174,11 +174,28 @@ const inviteUser = async (req,res,next) => {
     }
 }
 
-const updateTeam = (req,res) => {
-    
-}
-const removeUserFromTeam = (req,res) => {
+const updateTeam = async (req,res,next) => {
+    try {
+        await TeamModel.teamValidation(req.body);
+        const {name,Description,username} = req.body;
+        const teamId = req.params.teamId;
+        const userId = req.user._id;
+        const team = TeamModel.findOne({owner : userId,_id : teamId});
+        if(!team){
+            const error = new Error("تیمی با این مشخصات پیدا نشد");
+            error.statusCode = 404;
+            throw error;
+        }
+        await TeamModel.updateOne({_id : teamId},{$set : {name,Description,username}});
+        return res.status(200).json({
+            statusCode : 200,
+            success : true,
+            message : "بروزرسانی تیم با موفقیت انجام شد",
+        });
 
+    } catch (err) {
+        next(err)
+    }
 }
 module.exports = {
     createTeam,
@@ -188,5 +205,4 @@ module.exports = {
     getMyTeams,
     inviteUser,
     updateTeam,
-    removeUserFromTeam,
 }
