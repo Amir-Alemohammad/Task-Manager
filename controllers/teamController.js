@@ -87,12 +87,36 @@ const deleteTeamById = async (req,res,next) => {
 const getMyTeams = async (req,res,next) => {
     try {
         const userId = req.user._id;
-        const team = await TeamModel.find({
-            $or: [
-                {owner : userId},
-                {users : userId}
-            ]
-        });
+        const team = await TeamModel.aggregate([
+            {
+                $match: {
+                    $or: [{owner : userId},{users : userId}],
+                },
+            },
+        
+            {
+
+                $lookup:{
+                    from: "usersmodels",
+                    localField: "owner",
+                    foreignField : "_id",
+                    as : "owner",
+                },
+            },
+            {
+                $project: {
+                    "owner.Rols" : 0,
+                    "owner.Password" : 0,
+                    "owner.Teams" : 0,
+                    "owner.Skills" : 0,
+                    "owner.inviteRequests" : 0,
+                },
+            },
+            {
+                $unwind : "$owner",
+            },
+        ]);
+    
         if(!team){
             const error = new Error("تیمی با مشخصات شما وجود ندارد");
             error.statusCode = 404;
@@ -194,7 +218,7 @@ const updateTeam = async (req,res,next) => {
         });
 
     } catch (err) {
-        next(err)
+        next(err);
     }
 }
 module.exports = {
