@@ -140,10 +140,20 @@ const inviteUser = async (req,res,next) => {
                 {owner : userId},
                 {users : userId},
             ],     _id : teamId
-            
         });
+
+        if(team.owner.includes(userId)){
+            const error = new Error("شما مدیر این تیم هستید");
+            error.statusCode = 400;
+            throw error;
+        }    
+        if(team.users.includes(userId)){
+            const error = new Error("شما عضوی از این تیم هستید");
+            error.statusCode = 400;
+            throw error;
+        }
         if(!team){
-            const error = new Error("شما عضو هیچ تیمی نشده اید");
+            const error = new Error("تیمی جهت ارسال درخواست پیدا نشد");
             error.statusCode = 404;
             throw error;
         }
@@ -153,23 +163,23 @@ const inviteUser = async (req,res,next) => {
             error.statusCode = 404;
             throw error;
         }
+
         const findUserInTeam = async (teamId,userId) => {
             const result = await TeamModel.findOne({
                 $or: [{owner: userId},{users: userId}],
                 _id : teamId,
             });
-            const inviteRequests = user.inviteRequests;
-            const findCaller =  inviteRequests.find((index)=>{
-                 return index.caller;
-             });
-             if(!findCaller){
-                return !!result;
-             }
-             const caller = findCaller.caller ? req.user.UserName : "";
-             if(caller == req.user.UserName){
-                return !result
-             }             
+            const findUser = user.inviteRequests.forEach(e => {
+                if(e.teamId == teamId){
+                    const error = new Error("این فرد قبلا به این تیم دعوت شده است");
+                    error.statusCode = 400;
+                    throw error;
+                }else{
+                   return !!result;
+                }
+            });
         }
+
         const userInvited = await findUserInTeam(teamId,user._id); 
         if(userInvited){
             const error = new Error("این فرد قبلا به تیمی دعوت شده است");
