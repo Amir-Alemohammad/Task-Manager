@@ -6,19 +6,47 @@ const path = require('path');
 
 const getAllProject = async (req,res,next) => {
     try {
-        const owner = req.user._id;
-        const projects = await ProjectModel.find({owner});
+        const userId = req.user._id;
+        const projects = await ProjectModel.aggregate([
+            {
+                $match: {
+                    owner : userId,
+                },
+            },
+            {
+                $lookup:{
+                    from : "usersmodels",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as : "owner"
+                }
+            },
+            {
+                $project: {
+                    "owner.Rols" : 0,
+                    "owner.Password" : 0,
+                    "owner.Teams" : 0,
+                    "owner.Skills" : 0,
+                    "owner.inviteRequests" : 0,
+                    "owner._id" : 0,
+                    "owner.Email" : 0,
+                },
+            },
+            {
+                $unwind : "$owner",
+            },
+        ]);
         if(!projects){
-            const error = new Error("شما هیچ پروژه ای ندارید");
+            const error = new Error("پروژه ای برای نمایش وجود ندارد");
             error.statusCode = 404;
             throw error;
+        }else{
+            return res.status(200).json({
+                success : true,
+                statusCode : 200,
+                projects,
+            })
         }
-        return res.status(200).json({
-            success : true,
-            statusCode : 200,
-            projects,            
-        });
-        
     } catch (err) {
         next(err)
     }

@@ -99,25 +99,39 @@ const uploadImage = async (req,res,next) => {
 }
 const getAllinvites = async (req,res,next)=>{
     try {
-        const userId = req.user._id;
-        if(!userId){
-            const error = new Error("وارد حساب کاربری خود شوید");
-            error.statusCode = 400;
-            throw error;
+            const userId = req.user._id;
+            const requests = await UsersModel.aggregate([
+                {
+                    $match: {_id : userId},
+                },
+                {
+                    $lookup : {
+                        from : "usermodels",
+                        localField : "inviteRequests",
+                        foreignField : "UserName",
+                        as : "callerInfo",
+                    },
+                },
+                {
+                    $project: {
+                        "inviteRequests" : 1,
+                    },
+                },
+            ]);
+            if(!requests){
+                const error = new Error("درخواستی برای نمایش وجود ندارد");
+                error.statusCode = 404;
+                throw error;
+            }else{
+                return res.status(200).json({
+                    success : true,
+                    statusCode : 200,
+                    requests,
+                })
+            }
+
         }
-        const {inviteRequests} = await UsersModel.findById(userId,{inviteRequests : 1});
-        if(!inviteRequests){
-            const error = new Error("دعوت نامه برای شما ارسال نشده است");
-            error.statusCode = 404;
-            throw error
-        }else{
-            res.status(200).json({
-                success : true,
-                statusCode : 200,
-                requests : inviteRequests,
-            });
-        }
-    } catch (err) {
+     catch (err) {
         next(err)
     }
 }
