@@ -8,7 +8,7 @@ const get404 = (req,res) => {
 const get500 = (req,res) => {
    res.status(500).json({
     status: 500,
-    message : "خطایی از سمت سرمر رخ داده است",
+    message : "خطایی از سمت سرور رخ داده است",
     success : false,
    });
 }

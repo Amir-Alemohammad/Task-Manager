@@ -6,6 +6,7 @@ const userValidation = Yup.object().shape({
     UserName: Yup.string().required("نام کاربری الزامی می باشد").min(3,"نام کاربری نباید کمتر از 3 کاراکتر باشد"),
     PhoneNumber: Yup.string().required("شماره تلفن الزامی می باشد").min(11,"شماره تلفن را صحیح وارد کنید").max(11,"شماره تلفن را صحیح وارد کنید"),
     Password:Yup.string().required("کلمه عبور الزامی می باشد").min(6,"کلمه عبور نباید کمتر از 6 کاراکتر باشد"),
+    ConfirmPassword: Yup.string().required("تکرار کلمه عبور الزامی می باشد").oneOf([Yup.ref("Password"),null],"تایید کلمه عبور با کلمه عبور مطابقت ندارد").min(6,"کلمه عبور نباید کمتر از 6 کاراکتر باشد"),
     Email:Yup.string().email(),
     Rols: Yup.string().default([]),
     Skills: Yup.string().default([]),
