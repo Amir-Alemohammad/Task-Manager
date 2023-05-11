@@ -19,7 +19,7 @@ const checkLogin = async (req,res,next) => {
     const {UserName} = result;
     const user = await UsersModel.findOne({UserName}, {Password : 0,});    
     if(!user){
-        const error = new Error("user لطفا وارد حساب کاربری خود شوید");
+        const error = new Error("لطفا وارد حساب کاربری خود شوید");
         error.statusCode = 401;
         throw error;
     }    

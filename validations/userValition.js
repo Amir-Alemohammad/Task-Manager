@@ -1,5 +1,6 @@
 const Yup = require("yup");
 
+const phoneRegex = /^09[0-9]{9}$/ 
 
 const userValidation = Yup.object().shape({
     FullName: Yup.string().required("نام و نام خانوادگی الزامی می باشد").min(3,"نام و نام خانوادگی نباید کمتر از 3 کاراکتر باشد"),
@@ -13,6 +14,12 @@ const userValidation = Yup.object().shape({
     Teams: Yup.string().default([]),
 });
 
+const checkOtpSchema = Yup.object().shape({
+    PhoneNumber: Yup.string().required("شماره تلفن الزامی می باشد").matches(phoneRegex,"شماره تلفن را صحیح وارد کنید").min(11,"شماره تلفن را صحیح وارد کنید").max(11,"شماره تلفن را صحیح وارد کنید"),
+    code : Yup.string().required("کد ارسال شده الزامی می باشد").min(4).max(6),
+})
+
 module.exports = {
     userValidation,
+    checkOtpSchema
 };

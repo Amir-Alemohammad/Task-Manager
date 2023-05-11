@@ -52,6 +52,13 @@ const UsersSchema = new mongoose.Schema({
         maxlength: 11,
         minlength: 11,
     },
+    otp:{
+        type: Object,
+        default: {
+            code: 0,
+            expiresIn: 0
+        },
+    },
     Password:{
         type: String,
         required: true,

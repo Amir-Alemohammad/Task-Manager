@@ -94,27 +94,6 @@ const createProject = async (req,res,next) => {
         next(err);
     }
 }
-const getProjectById = async (req,res,next) => {
-    try {
-        const owner = req.user._id;
-        const projectID = req.params.id;
-        const project = await ProjectModel.findOne({owner,_id : projectID});
-        if(!project){
-            const error = new Error("پروژه ای وجود ندارد");
-            error.statusCode = 404;
-            throw error;
-        }
-        return res.status(200).json({
-            success: true,
-            statusCode: 200,
-            project, 
-        });
-
-
-    } catch (err) {
-        next(err);
-    }
-}
 const updateProject = async (req,res,next) => {
     try {
         if(!req.file || Object.keys(req.file).length == 0){
@@ -196,7 +175,6 @@ const removeProject = async (req,res,next) => {
 module.exports = {
     createProject,
     getAllProject,
-    getProjectById,
     updateProject,
     removeProject,
 }

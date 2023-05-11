@@ -44,25 +44,6 @@ const getTeamList = async (req,res,next) =>{
         next(err)
     }
 }
-const getTeamById = async (req,res,next) =>{
-    try {
-        const teamId = req.params.id;
-        const team = await TeamModel.findOne({_id: teamId});
-        if(!team){
-            const error = new Error("تیمی با این مشخصات وجود ندارد");
-            error.statusCode = 404;
-            throw error
-        }else{
-            res.status(200).json({
-                success: true,
-                statusCode : 200,
-                team,
-            });
-        }
-    } catch (err) {
-        next(err)
-    }
-}
 const deleteTeamById = async (req,res,next) => {
     try {
         const owner = req.user._id;
@@ -234,7 +215,6 @@ const updateTeam = async (req,res,next) => {
 module.exports = {
     createTeam,
     getTeamList,
-    getTeamById,
     deleteTeamById,
     getMyTeams,
     inviteUser,

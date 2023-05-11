@@ -1,7 +1,11 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const kavenegar = require('kavenegar');
 
 const Users = require("../models/Users.js");
+const {RandomNumberGenerator} = require("../modules/functions.js");
+const UsersModel = require("../models/Users.js");
+const { checkOtpSchema } = require("../validations/userValition.js");
 
 const register = async (req,res,next) => {
     try {
@@ -47,41 +51,86 @@ const register = async (req,res,next) => {
         next(err);
     }
 }
-const login = async (req,res,next) => {
+const checkOtp = async (req,res,next) => {
         try {
-            const {Email,Password} = req.body;
-            const user = await Users.findOne({Email});
+            const {PhoneNumber} = req.body;
+            const user = await Users.findOne({PhoneNumber});
+            const code = RandomNumberGenerator();
             if(!user){
-                const error = new Error("ایمیل یا کلمه عبور صحیح نیست");
-                error.statusCode = 401;
+                const error = new Error("کاربری با این شماره تلفن یافت نشد");
+                error.statusCode = 404;
                 throw error; 
             }
-            const isEqual = await bcrypt.compare(Password,user.Password);
-            if(isEqual){
-                const token = jwt.sign({
-                    email: user.Email,
-                    UserName : user.UserName
-                },process.env.JWT_SECRET);
-                res.status(200).json({
-                    success: true,
-                    status: 200,
-                    accessToken : token,
-                    userId: user._id.toString(),
-                });
-            }else{
-                const error = new Error("ایمیل یا کلمه عبور صحیح نیست");
-                error.statusCode = 422;
-                throw error;
-            }
+            await UsersModel.updateOne({PhoneNumber},{
+                $set:{
+                    otp:{
+                        code,
+                        expiresIn: new Date().getTime() + 120000,
+                    }
+                }
+            })
+            const api = kavenegar.KavenegarApi({
+                apikey: process.env.API_SECRET,
+            });
+            api.VerifyLookup({
+                receptor: PhoneNumber,
+                template: "Login",
+                token: code,
+            },function(response,status){
+                console.log(response);
+                console.log(status);
+            });
+            res.status(200).json({
+                success : true,
+                status: 200,
+                message: "کد اعتبار سنجی با موفقیت برای شما ارسال شد",
+            });
+            
         } catch (err) {
             next(err)
         }
+}
+const login = async (req,res,next) => {
+    try {
+    await checkOtpSchema.validate(req.body)
+    const {PhoneNumber,code} = req.body;
+    const user = await UsersModel.findOne({PhoneNumber});
+    if(!user){
+        const error = new Error("کاربری با این شماره تلفن ثبت نشده است");
+        error.statusCode = 404;
+        throw error;
+    }
+    if(user.otp.code != code){
+        const error = new Error("کد ارسال شده صحیح نمی باشد");
+        error.statusCode = 404;
+        throw error;
+    }
+    const nowDate = Date.now();
+    if(+user.otp.EXPIRES_IN < nowDate){ // + for convert to number
+            const error = new Error("کد شما منقضی شده است");
+            error.statusCode = 401;
+            throw error;
+    }
+    const token = jwt.sign({
+        email: user.Email,
+        UserName : user.UserName
+    },process.env.JWT_SECRET);
+    res.status(200).json({
+        success : true,
+        status : 200,
+        accessToken : token,
+    })
+    } catch (err) {
+        next(err)
+    }
+    
 }
 const resetPassword = (req,res) => {
 
 }
 module.exports = {
     register,
+    checkOtp,
     login,
     resetPassword,
 }

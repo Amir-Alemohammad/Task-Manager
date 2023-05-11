@@ -21,7 +21,11 @@ function createUploadPath () {
     fs.mkdirSync(uploadPath,{recursive: true});
     return uploadPath;
 }
+function RandomNumberGenerator(){
+    return Math.floor(Math.random() * 90000 + 10000);
+}
 module.exports = {
     verifyJwtToken,
     createUploadPath,
+    RandomNumberGenerator
 }

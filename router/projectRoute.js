@@ -10,8 +10,6 @@ router.post("/create" , checkLogin , upload_multer ,projectController.createProj
 
 router.get("/list",checkLogin,projectController.getAllProject);
 
-router.get("/:id",checkLogin,projectController.getProjectById);
-
 router.delete("/remove/:id",checkLogin,projectController.removeProject);
 
 router.put("/edit/:id",checkLogin,upload_multer,projectController.updateProject);
