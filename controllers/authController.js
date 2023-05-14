@@ -115,6 +115,7 @@ const login = async (req,res,next) => {
         email: user.Email,
         UserName : user.UserName
     },process.env.JWT_SECRET);
+
     res.status(200).json({
         success : true,
         status : 200,
