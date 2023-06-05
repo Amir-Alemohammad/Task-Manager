@@ -23,7 +23,7 @@ const editProfile = async (req,res,next) => {
    try {
         const data = { ...req.body};
         const userId = req.user._id;
-        const fields = ["FullName","Email","Skills"];
+        const fields = ["FullName","Email","PhoneNumber"];
         const badValues = [ "" , " " , 0 , NaN , null , undefined , -1 , [] , {}];
         Object.entries(data).forEach(([key,value]) => {
             if(!fields.includes(key)){
