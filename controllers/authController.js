@@ -57,7 +57,7 @@ const checkOtp = async (req,res,next) => {
             const user = await Users.findOne({PhoneNumber});
             const code = RandomNumberGenerator();
             if(!user){
-                const error = new Error("کاربری با این شماره تلفن یافت نشد");
+                const error = new Error("کاربری با این شماره تلفن ثبت نام نکرده است");
                 error.statusCode = 404;
                 throw error; 
             }
@@ -96,7 +96,7 @@ const login = async (req,res,next) => {
     const {PhoneNumber,code} = req.body;
     const user = await UsersModel.findOne({PhoneNumber});
     if(!user){
-        const error = new Error("کاربری با این شماره تلفن ثبت نشده است");
+        const error = new Error("کاربری با این شماره تلفن ثبت نام نکرده است");
         error.statusCode = 404;
         throw error;
     }
