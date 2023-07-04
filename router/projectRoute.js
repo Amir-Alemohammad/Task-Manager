@@ -41,7 +41,7 @@ const {upload_multer} = require("../modules/multer.js");
  * @swagger
  *  /project/create:
  *          post:
- *              summary: user checkOtp with phoneNumber and code
+ *              summary: user create project
  *              tags: [Project Section]
  *              description: create Project
  *              requestBody:
@@ -64,7 +64,24 @@ const {upload_multer} = require("../modules/multer.js");
 router.post("/create" , checkLogin , upload_multer ,projectController.createProject);
 
 
-
+/**
+ * 
+ * @swagger
+ *  /project/list:
+ *          get:
+ *              summary: user get list of all project
+ *              tags: [Project Section]
+ *              description: get list of all project
+ *              responses:
+ *                  200:
+ *                      description: Success
+ *                  404:
+ *                      description: Not Found 
+ *                  401:
+ *                      description: Unauthorization
+ *                  500:
+ *                      description: Internal Server Errro  
+ */
 
 router.get("/list",checkLogin,projectController.getAllProject);
 

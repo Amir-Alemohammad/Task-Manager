@@ -46,7 +46,7 @@ app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerJsDoc({
         info : {
             title : "Task-Manager",
             version : "2.0.0",
-            description : "سایتی برای مدیریت برنامه ها",
+            description : "سایتی برای مدیریت کار های روزمره",
             contact: {
                 name: "Amir-Alemohammad",
                 email: "amirho3inalemohammad@gmail.com",

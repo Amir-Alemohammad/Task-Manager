@@ -23,6 +23,9 @@ const getAllProject = async (req,res,next) => {
             },
             {
                 $project: {
+                    "createdAt": 0,
+                    "updatedAt": 0,
+                    "__v" : 0,
                     "owner.Rols" : 0,
                     "owner.Password" : 0,
                     "owner.Teams" : 0,
@@ -30,6 +33,11 @@ const getAllProject = async (req,res,next) => {
                     "owner.inviteRequests" : 0,
                     "owner._id" : 0,
                     "owner.Email" : 0,
+                    "owner.otp" : 0,
+                    "owner.createdAt" : 0,
+                    "owner.updatedAt" : 0,
+                    "owner.__v" : 0,
+                    "owner.PhoneNumber" : 0,
                 },
             },
             {
