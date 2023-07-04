@@ -11,13 +11,13 @@ const userValidation = Yup.object().shape({
     Password:Yup.string().required("کلمه عبور الزامی می باشد").min(6,"کلمه عبور نباید کمتر از 6 کاراکتر باشد"),
     ConfirmPassword: Yup.string().required("تکرار کلمه عبور الزامی می باشد").oneOf([Yup.ref("Password"),null],"تایید کلمه عبور با کلمه عبور مطابقت ندارد").min(6,"کلمه عبور نباید کمتر از 6 کاراکتر باشد"),
     Email:Yup.string().email(),
-    Rols: Yup.string().default([]),
-    Skills: Yup.string().default([]),
-    Teams: Yup.string().default([]),
+    Rols: Yup.string().default(""),
+    Skills: Yup.string().default(""),
+    Teams: Yup.string().default(""),
 });
 
 const checkOtpSchema = Yup.object().shape({
-    PhoneNumber: Yup.string().required("شماره تلفن الزامی می باشد").matches(phoneRegex,"شماره تلفن را صحیح وارد کنید").min(11,"شماره تلفن را صحیح وارد کنید").max(11,"شماره تلفن را صحیح وارد کنید"),
+    PhoneNumber: Yup.string().matches(phoneRegex,"شماره تلفن را صحیح وارد کنید").required("شماره تلفن الزامی می باشد").min(11,"شماره تلفن را صحیح وارد کنید").max(11,"شماره تلفن را صحیح وارد کنید"),
     code : Yup.string().required("کد ارسال شده الزامی می باشد").min(4,"کد اعتبار سنجی نمیتواند کمتر از 4 کاراکتر باشد").max(6,"کد اعتبار سنجی نمیتواند بیشتر از 6 کاراکتر باشد"),
 })
 

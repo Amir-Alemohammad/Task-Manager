@@ -1,6 +1,9 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const path = require('path');
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+
 
 const connectDB = require("./config/dataBase.js");
 const errorController = require("./controllers/errorController.js");
@@ -34,6 +37,29 @@ app.use(express.json());
 //Static Folder
 app.use(express.static(path.join(__dirname,"public")));
 
+
+//Swagger Ui
+app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerJsDoc({
+    definition : {
+        info : {
+            title : "Task-Manager",
+            version : "2.0.0",
+            description : "سایتی برای مدیریت برنامه ها",
+            contact: {
+                name: "Amir-Alemohammad",
+                email: "amirho3inalemohammad@gmail.com",
+            }
+        },
+        servers:[
+            {
+                url : "http://127.0.0.1:3000"
+            },
+        ],
+        
+    },
+    apis: ["./router/*.js"],
+
+})));
 
 
 //Routes
