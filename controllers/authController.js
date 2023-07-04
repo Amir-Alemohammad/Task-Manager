@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const kavenegar = require('kavenegar');
+const nodemailer = require('nodemailer');
+
 
 const Users = require("../models/Users.js");
 const {RandomNumberGenerator} = require("../modules/functions.js");
@@ -40,6 +42,30 @@ const register = async (req,res,next) => {
                 Rols,
                 Teams,
                 Skills,
+            });
+            
+            //Send Email
+            const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'amirho3inalemohammad@gmail.com',
+                pass: process.env.APP_PASS,
+            }
+            });
+
+            const mailOptions = {
+            from: 'amirho3inalemohammad@gmail.com',
+            to: Email,
+            subject: 'خوش آمدید',
+            text: `سلام ${FullName} عزیز به سایت ما خوش آمدید`
+            };
+
+            transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
             });
             res.status(201).json({
                 status: 201,
