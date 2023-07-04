@@ -11,9 +11,8 @@ const { setHeaders } = require("./middlewares/handleHeaders.js");
 const app = express();
 
 //Config DotEnv
-dotenv.config({
-    path: "./config/config.env",
-});
+dotenv.config();
+
 
 
 //DataBase Connection
