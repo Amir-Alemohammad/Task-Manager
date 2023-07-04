@@ -26,7 +26,24 @@ const {upload_multer} = require("../modules/multer.js");
  *                  image:
  *                      type: file
  *                      description: upload file
- * 
+ *          editProject:
+ *              type: object
+ *              required:
+ *                  -   Title
+ *              properties:
+ *                  Title:
+ *                      type: string
+ *                      description: edit Title
+ *                  Text:
+ *                      type: string
+ *                      description: edit Text
+ *                  tags:
+ *                      type: string
+ *                      description: edit tags
+ *                  image:
+ *                      type: file
+ *                      description: edit image
+ *  
  */
 
 
@@ -113,6 +130,38 @@ router.get("/list",checkLogin,projectController.getAllProject);
 
 router.delete("/remove/:id",checkLogin,projectController.removeProject);
 
+
+/**
+ * 
+ * @swagger
+ *  /project/edit/{id}:
+ *          put:
+ *              summary: user edit project
+ *              tags: [Project Section]
+ *              description: edit project with id
+ *              parameters:
+ *                  -   in: path
+ *                      name: id
+ *                      type: string
+ *                      required: true
+ *                      description: delete project with id
+ *              requestBody:
+ *                  required: true
+ *                  content: 
+ *                      multipart/form-data:
+ *                          schema:
+ *                              $ref: '#/components/schemas/editProject'
+ *                  
+ *              responses:
+ *                  200:
+ *                      description: Success
+ *                  404:
+ *                      description: Not Found 
+ *                  401:
+ *                      description: Unauthorization
+ *                  500:
+ *                      description: Internal Server Errro  
+ */
 
 router.put("/edit/:id",checkLogin,upload_multer,projectController.updateProject);
 

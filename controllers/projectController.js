@@ -1,7 +1,7 @@
 const ProjectModel = require("../models/projects.js");
 const fs = require('fs');
 const path = require('path');
-const { mongoIdValidation } = require("../validations/projectValidation.js");
+const { mongoIdValidation, projectValidation } = require("../validations/projectValidation.js");
 
 
 
@@ -105,12 +105,13 @@ const createProject = async (req,res,next) => {
 }
 const updateProject = async (req,res,next) => {
     try {
+        await mongoIdValidation.validate(req.params)
+        await ProjectModel.projectValidation(req.body);
         if(!req.file || Object.keys(req.file).length == 0){
             const error = new Error("برای بروزرسانی عکسی انتخاب کنید");
             error.statusCode = 400;
             throw error;
         }
-        await ProjectModel.projectValidation(req.body);
         const {Title,Text,tags} = req.body;
         const projectID = req.params.id;
         const owner = req.user._id;
@@ -120,7 +121,7 @@ const updateProject = async (req,res,next) => {
         const imageSize = req.file.size;
         const maxSize = 4 * 1024 * 1024;
         if(!project){
-            const error = new Error("پروژه ای پیدا نشد");
+            const error = new Error("پروژه ای با این شناسه پیدا نشد");
             error.statusCode = 404;
             throw error;
         }
