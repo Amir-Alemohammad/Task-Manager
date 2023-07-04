@@ -38,9 +38,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname,"public")));
 
 
+
 //Swagger Ui
 app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerJsDoc({
-    definition : {
+    swaggerDefinition : {
+        openapi: "3.0.0",
         info : {
             title : "Task-Manager",
             version : "2.0.0",
@@ -55,11 +57,21 @@ app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerJsDoc({
                 url : "http://127.0.0.1:3000"
             },
         ],
-        
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                }
+            }
+        },
+        security: [{
+            bearerAuth: []
+        }],
     },
     apis: ["./router/*.js"],
-
-})));
+}),{explorer:true}));
 
 
 //Routes

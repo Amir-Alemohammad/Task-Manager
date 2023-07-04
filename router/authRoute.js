@@ -2,6 +2,77 @@ const router = require("express").Router();
 
 const authController = require("../controllers/authController.js");
 
+/**
+ * @swagger
+ *  components:
+ *      schemas:
+ *          checkOtp:
+ *              type: object
+ *              required:
+ *                  -   PhoneNumber
+ *              properties:
+ *                  PhoneNumber:
+ *                      type: string
+ *                      description: the user mobile for signup/signin
+ *          login:
+ *              type: object
+ *              required:
+ *                  -   PhoneNumber
+ *                  -   code
+ *              properties:
+ *                  PhoneNumber:
+ *                      type: string
+ *                      description: the user mobile for signup/signin
+ *                  code:
+ *                      type: integer
+ *                      description: reviced code from getOTP
+ *          register:
+ *              type: object
+ *              required:
+ *                  -   FullName
+ *                  -   UserName
+ *                  -   Email
+ *                  -   PhoneNumber
+ *                  -   Password
+ *                  -   ConfirmPassword
+ *          
+ * 
+ *              properties:
+ *                  FullName:
+ *                      type: string
+ *                      description: you'r firstname and lastname
+ *                  UserName:
+ *                      type: string
+ *                      description: you'r Username
+ *                  Email:
+ *                      type: string
+ *                      description: you'r Email Address
+ *                  PhoneNumber:
+ *                      type: string
+ *                      description: you'r PhoneNumber
+ *                  Password:
+ *                      type: string
+ *                      description: you'r Password
+ *                  ConfirmPassword:
+ *                      type: string
+ *                      description: Confirm Password
+ *                  Rols:
+ *                      type: string
+ *                      description: you'r Roles
+ *                  Skills:
+ *                      type: string
+ *                      description: you'r Skills
+ *                  Teams:
+ *                      type: string
+ *                      description: you'r team
+ * 
+ *                  
+ *                  
+ *                  
+ *                 
+ *          
+ *          
+ */
 
 
 
@@ -11,6 +82,7 @@ const authController = require("../controllers/authController.js");
  *      name: User Authorization
  *      description: User Auth Section
  */
+
 /**
  * @swagger
  * 
@@ -19,50 +91,15 @@ const authController = require("../controllers/authController.js");
  *              summary: register user in user panel
  *              tags : [User Authorization]
  *              description: register user
- *              parameters:
- *              
- *              -   name: FullName
- *                  description: Your firstname and lastname
- *                  in: formData
+ *              requestBody:
  *                  required: true
- *                  type: string
- *              -   name: UserName
- *                  description: write you'r username
- *                  in: formData
- *                  required: true
- *                  type: string
- *              -   name: PhoneNumber
- *                  description: fa-IRI phone number
- *                  in: formData
- *                  required: true
- *                  type: string
- *              -   name: Email
- *                  description: your email address
- *                  required: true
- *                  in: formData
- *                  type: string
- *              -   name: Password
- *                  description: your password
- *                  required: true
- *                  in: formData
- *                  type: string
- *              -   name: ConfirmPassword
- *                  description: confirm password
- *                  required: true
- *                  in: formData
- *                  type: string
- *              -   name: Rols
- *                  description: you'r roles
- *                  in: formData
- *                  type: string
- *              -   name: Skills
- *                  description: you'r Skills
- *                  in: formData
- *                  type: string
- *              -   name: Teams
- *                  description: you'r Team
- *                  in: formData
- *                  type: string
+ *                  content: 
+ *                      application/x-www-form-urlencoded:
+ *                          schema:
+ *                              $ref: '#/components/schemas/register'
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/register'
  *              responses:
  *                      201:
  *                          description: Success
@@ -77,6 +114,7 @@ const authController = require("../controllers/authController.js");
 router.post("/register",authController.register);
 
 
+
 /**
  * 
  * @swagger
@@ -84,12 +122,15 @@ router.post("/register",authController.register);
  *          post:
  *              summary: user getOtp with PhoneNumber
  *              tags: [User Authorization]
- *              parameters:
- *              -   name: PhoneNumber
- *                  description: your phone number
+ *              requestBody:
  *                  required: true
- *                  in: formData
- *                  type : string
+ *                  content: 
+ *                      application/x-www-form-urlencoded:
+ *                          schema:
+ *                              $ref: '#/components/schemas/checkOtp'
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/checkOtp'       
  *              responses:
  *                  200:
  *                      description: Success
@@ -109,17 +150,15 @@ router.post("/checkOtp",authController.checkOtp);
  *          post:
  *              summary: user login with phoneNumber and code
  *              tags: [User Authorization]
- *              parameters:
- *              -   name: PhoneNumber
- *                  description: your phone number
+ *              requestBody:
  *                  required: true
- *                  in: formData
- *                  type : string
- *              -   name: code
- *                  description: the code that was sent
- *                  required: true
- *                  in: formData
- *                  type : string
+ *                  content: 
+ *                      application/x-www-form-urlencoded:
+ *                          schema:
+ *                              $ref: '#/components/schemas/login'
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/login'  
  *              responses:
  *                  200:
  *                      description: Success

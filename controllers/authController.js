@@ -80,8 +80,10 @@ const register = async (req,res,next) => {
 const checkOtp = async (req,res,next) => {
         try {
             const {PhoneNumber} = req.body;
+            console.log(PhoneNumber)
             const user = await Users.findOne({PhoneNumber});
             const code = RandomNumberGenerator();
+            console.log(user)
             if(!user){
                 const error = new Error("کاربری با این شماره تلفن ثبت نام نکرده است");
                 error.statusCode = 404;
