@@ -85,7 +85,34 @@ router.post("/create" , checkLogin , upload_multer ,projectController.createProj
 
 router.get("/list",checkLogin,projectController.getAllProject);
 
+/**
+ * 
+ * @swagger
+ *  /project/remove/{id}:
+ *          delete:
+ *              summary: user remove project
+ *              tags: [Project Section]
+ *              description: remove project with id
+ *              parameters:
+ *                  -   in: path
+ *                      name: id
+ *                      type: string
+ *                      required: true
+ *                      description: delete project with id
+ *              responses:
+ *                  200:
+ *                      description: Success
+ *                  404:
+ *                      description: Not Found 
+ *                  401:
+ *                      description: Unauthorization
+ *                  500:
+ *                      description: Internal Server Errro  
+ */
+
+
 router.delete("/remove/:id",checkLogin,projectController.removeProject);
+
 
 router.put("/edit/:id",checkLogin,upload_multer,projectController.updateProject);
 

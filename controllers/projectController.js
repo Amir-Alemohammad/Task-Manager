@@ -1,6 +1,7 @@
 const ProjectModel = require("../models/projects.js");
 const fs = require('fs');
 const path = require('path');
+const { mongoIdValidation } = require("../validations/projectValidation.js");
 
 
 
@@ -156,6 +157,7 @@ const updateProject = async (req,res,next) => {
 }
 const removeProject = async (req,res,next) => {
     try {
+        await mongoIdValidation.validate(req.params);
         const owner = req.user._id;
         const projectID = req.params.id;
         const project = await ProjectModel.findOne({owner,_id : projectID});
