@@ -4,7 +4,39 @@ const path = require("path")
 
 const getProfile = async (req,res,next) => {
     try {
-        const user = req.user;
+        const userId = req.user._id;
+
+        const user = await UsersModel.aggregate([
+            {
+                $match:{
+                    _id : userId,
+                }
+            },
+            {
+                $lookup:{
+                    from: "usersmodels",
+                    foreignField: "user",
+                    localField: "_id" ,
+                    as: "user",
+                },
+            },
+            {
+                $project:{
+                    "_id" : 0,
+                    "FullName" : 1,
+                    "UserName" : 1,
+                    "PhoneNumber" : 1,
+                    "Email" : 1,
+                    "Rols" : 1,
+                    "Skills" : 1,
+                    "Teams" : 1,
+                    "inviteRequests" : 1,
+                    "createdAt" : 1,
+                    "profile_image" : 1,
+                }
+            }
+        ]);
+
         if(user.profile_image){
             user.profile_image = `${req.protocol}://${req.get("host")}/${(user.profile_image).replace(/\\/gm,"/")}`;
         }else{
@@ -192,15 +224,16 @@ const changeRequest = async (req,res,next) =>{
         
         const request = await UsersModel.findOne({"inviteRequests._id" : id});
         
-        const findRequest = request.inviteRequests.find(item => {
-            return item.id == id;
-        });
-        
         if(!request){
             const error = new Error("درخواستی با این مشخصات یافت نشد");
             error.statusCode = 404;
             throw error;
         }
+        
+        const findRequest = request.inviteRequests.find(item => {
+            return item.id == id;
+        });
+        
 
         if(findRequest.status !== "pending"){
             const error = new Error("این درخواست قبلا رد یا پذیرفته شده است")
