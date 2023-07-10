@@ -106,7 +106,7 @@ const checkOtp = async (req,res,next) => {
                 token: code,
             },function(response,status){
                 console.log(response);
-                console.log(status);
+                // console.log(status);
             });
             res.status(200).json({
                 success : true,
