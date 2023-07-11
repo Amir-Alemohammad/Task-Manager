@@ -73,7 +73,7 @@ const createProject = async (req,res,next) => {
         }
         const imageSize = req.file.size;
         const maxSize = 4 * 1024 * 1024;
-        const filePath = req.file.path.replace("\\","/").substring(39);
+        const filePath = req.file.path.replace(/\\/g,"/").substring(39);
         if(imageSize > maxSize){
             fs.unlinkSync(path.join(__dirname,"..","public",filePath));
             const error = new Error("حجم عکس مورد نظر نباید بیشتر از 4 مگابایت باشد");
@@ -85,7 +85,7 @@ const createProject = async (req,res,next) => {
         const owner = req.user._id;
         if(mimetype == "image/png" || mimetype == "image/jpeg"){
             
-            await ProjectModel.create({Title,Text,owner,tags,Image:filePath});
+            await ProjectModel.create({Title,Text,owner,tags,Image : filePath});
             return res.status(201).json({
                 imageAddress : filePath,
                 success: true,
