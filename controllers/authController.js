@@ -142,7 +142,7 @@ const login = async (req,res,next) => {
     const token = jwt.sign({
         email: user.Email,
         UserName : user.UserName
-    },process.env.JWT_SECRET);
+    },process.env.JWT_SECRET,{expiresIn : "24h"});
 
     res.status(200).json({
         success : true,

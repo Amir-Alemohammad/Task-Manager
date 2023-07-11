@@ -13,7 +13,9 @@ const createTeam = async (req,res,next) => {
             error.statusCode = 400;
             throw error;
         }else{
-            await TeamModel.create({name,Description,owner,username});
+            await TeamModel.create({
+                name,Description,owner,username
+            });
             return res.status(201).json({
                 success: true,
                 statusCode: 201,

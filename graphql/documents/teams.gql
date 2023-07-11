@@ -1,0 +1,10 @@
+{
+  teams {
+    id
+    name
+    Description
+    username
+    users
+    owner
+  }
+}

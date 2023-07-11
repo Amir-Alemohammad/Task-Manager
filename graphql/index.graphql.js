@@ -1,11 +1,13 @@
-const { GraphQLObjectType, GraphQLSchema, GraphQLInt, GraphQLString, GraphQLList } = require("graphql");
+const { GraphQLObjectType, GraphQLSchema, } = require("graphql");
 const { projectResolver } = require("./queries/project.resolver");
+const { teamResolver } = require("./queries/team.resolver");
 
 
 const RootQuery = new  GraphQLObjectType({
     name: "RootQuery",
     fields: {
-        projects : projectResolver
+        projects : projectResolver,
+        teams : teamResolver,
     },
 });
 

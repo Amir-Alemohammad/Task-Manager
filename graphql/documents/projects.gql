@@ -1,0 +1,12 @@
+{
+  projects {
+    id
+    Title
+    Text
+    Image
+    owner
+    Team
+    Private
+    tags
+  }
+}
