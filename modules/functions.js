@@ -2,13 +2,12 @@ const jwt = require("jsonwebtoken");
 
 const path = require("path");
 const fs = require('fs');
+const createHttpError = require("http-errors");
 
 function verifyJwtToken(token) {
     const result = jwt.verify(token,process.env.JWT_SECRET);
     if(!result?.email){
-        const error = new Error("لطفا وارد حساب کاربری خود شوید");
-        error.statusCode = 401;
-        throw error
+        throw createHttpError.Unauthorized("لطفا وارد حساب کاربری خود شوید")
     }
     return result;
 }
