@@ -39,6 +39,8 @@ const checkLoginInGraphQL = async (req) => {
     
        let token = authorization.split(" ")[1];
     
+    
+
        
        if(!token) throw new createHttpError.Unauthorized("لطفا وارد حساب کاربری خود شوید")
     
@@ -53,7 +55,7 @@ const checkLoginInGraphQL = async (req) => {
      
     } catch (error) {
         throw new createHttpError.Unauthorized(error.message)
-        
+
     }
  
 }

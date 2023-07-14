@@ -5,7 +5,13 @@ const fs = require('fs');
 const createHttpError = require("http-errors");
 
 function verifyJwtToken(token) {
-    const result = jwt.verify(token,process.env.JWT_SECRET);
+    const result = jwt.verify(token,process.env.JWT_SECRET,function(err,decoded){
+        if(err && err.message === "jwt expired"){
+            throw createHttpError.Unauthorized("لطفا وارد حساب کاربری خود شوید")
+        }else{
+            return decoded;
+        }
+    });
     if(!result?.email){
         throw createHttpError.Unauthorized("لطفا وارد حساب کاربری خود شوید")
     }
